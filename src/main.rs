@@ -39,7 +39,8 @@ fn length(tour: &Vec<usize>, xs: &Vec<Vec<f64>>) -> f64 {
 fn find_tangle(tour: &Vec<usize>, x: &Vec<Vec<f64>>) -> Option<(usize, usize)> {
     let n = tour.len();
     for (v, i) in tour.iter().enumerate() {
-        for (u, j) in tour.iter().enumerate() {
+        for (u, k) in tour[i+1..].iter().enumerate() {
+            let j = k + i;
             let e = [tour[i % n], tour[(i+1) % n]];
             let f = [tour[j % n], tour[(j+1) % n]];
             if e == f {
@@ -62,8 +63,8 @@ fn find_tangle(tour: &Vec<usize>, x: &Vec<Vec<f64>>) -> Option<(usize, usize)> {
 fn untangle_iteration(i: usize, j: usize, tour: &Vec<usize>) -> Vec<usize> {
     let n = tour.len();
     let (i1, i2) = (usize::min(i, j), usize::max(i, j));
-    let mut p1: Vec<usize> = tour[..i1].into();
-    let mut p2: Vec<usize> = tour[i1+2..i2].into();
+    let mut p1: Vec<_> = tour[..i1].into();
+    let mut p2: Vec<_> = tour[i1+2..i2].into();
     p2.reverse();
     let mut out: Vec<usize> = vec![];
     if i2 == n-1 {
@@ -108,9 +109,9 @@ fn untangle_tour(mut tour: Vec<usize>, x: &Vec<Vec<f64>>, iter_max: usize) -> (V
 
 
 fn main() {
-    let mut ns: Vec<_> = (8000..=10000).step_by(1000).collect();
-    //let mut ns2: Vec<_> = (5000..=10000).step_by(1000).collect();
-    //ns.append(&mut ns2);
+    let mut ns: Vec<_> = (100..=1000).step_by(100).collect();
+    let mut ns2: Vec<_> = (10000..=10000).step_by(1000).collect();
+    ns.append(&mut ns2);
     let nsamples: usize = 1000;
 
     let mut rng = rand::thread_rng();
