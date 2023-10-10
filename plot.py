@@ -17,7 +17,7 @@ def read_output(path):
         return ns, lens
 
 
-ns, lens = read_output("out2")
+ns, lens = read_output("out")
 ns = np.array(ns)
 lens = np.array(lens)
 

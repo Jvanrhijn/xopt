@@ -112,8 +112,8 @@ fn untangle_tour(mut tour: Vec<usize>, x: &Vec<Vec<f64>>, iter_max: usize) -> (V
 
 fn main() {
     let mut ns: Vec<_> = (10..=100).step_by(10).collect();
-    //let mut ns2: Vec<_> = (10000..=10000).step_by(1000).collect();
-    //ns.append(&mut ns2);
+    let mut ns2: Vec<_> = (200..=1000).step_by(100).collect();
+    ns.append(&mut ns2);
     let nsamples: usize = 100;
 
     let mut rng = rand::thread_rng();
