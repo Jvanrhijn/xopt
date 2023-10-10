@@ -19,15 +19,6 @@ fn norm(x: &Vec<f64>) -> f64 {
 }
 
 
-
-fn ccw(a: &Vec<f64>, b: &Vec<f64>, c: &Vec<f64>) -> bool {
-    (c[1] - a[1]) * (b[0] - a[0]) > (b[1] - a[1]) * (c[0] - a[0])
-}
-
-fn intersect(a: &Vec<f64>, b: &Vec<f64>, c: &Vec<f64>, d: &Vec<f64>) -> bool {
-    ccw(a, c, d) != ccw(b, c, d) && ccw(a, b, c) != ccw(a, b, d)
-}
-
 fn length(tour: &Vec<usize>, xs: &Vec<Vec<f64>>) -> f64 {
     let mut l = 0.0;
     for (i, j) in tour.iter().zip(&tour[1..]) {
@@ -36,17 +27,28 @@ fn length(tour: &Vec<usize>, xs: &Vec<Vec<f64>>) -> f64 {
     l + norm(&subtr(&xs[0], &xs[xs.len()-1]))
 }
 
+fn edge_length(edge: &[usize], xs: &Vec<Vec<f64>>) -> f64 {
+    norm(&subtr(&xs[edge[0]], &xs[edge[1]]))
+}
+
 fn find_tangle(tour: &Vec<usize>, x: &Vec<Vec<f64>>) -> Option<(usize, usize)> {
     let n = tour.len();
     for (v, i) in tour.iter().enumerate() {
         for (u, k) in tour[i+1..].iter().enumerate() {
             let j = k + i;
+            // e and f are the edges to be potentially removed from the tour
             let e = [tour[i % n], tour[(i+1) % n]];
             let f = [tour[j % n], tour[(j+1) % n]];
             if e == f {
                 continue
             }
-            if intersect(&x[e[0]], &x[e[1]], &x[f[0]], &x[f[1]]) {
+            // this part needs to change, everything else can remain the same
+            // given e and f, need to determine which edges would replace them
+            let g = [e[0], f[0]];
+            let h = [e[1], f[1]];
+
+            if f64::max(edge_length(&e, &x), edge_length(&f, &x)) > f64::max(edge_length(&g, &x), edge_length(&h, &x)) 
+                && f64::min(edge_length(&e, &x), edge_length(&f, &x)) > f64::min(edge_length(&g, &x), edge_length(&h, &x)) {
                 let idxe = i % n;
                 let idxf = j % n;
                 if f.contains(&e[0]) || f.contains(&e[1]) {
@@ -109,10 +111,10 @@ fn untangle_tour(mut tour: Vec<usize>, x: &Vec<Vec<f64>>, iter_max: usize) -> (V
 
 
 fn main() {
-    let mut ns: Vec<_> = (100..=1000).step_by(100).collect();
-    let mut ns2: Vec<_> = (10000..=10000).step_by(1000).collect();
-    ns.append(&mut ns2);
-    let nsamples: usize = 1000;
+    let mut ns: Vec<_> = (10..=100).step_by(10).collect();
+    //let mut ns2: Vec<_> = (10000..=10000).step_by(1000).collect();
+    //ns.append(&mut ns2);
+    let nsamples: usize = 100;
 
     let mut rng = rand::thread_rng();
 
