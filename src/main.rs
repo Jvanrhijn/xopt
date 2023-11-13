@@ -47,8 +47,9 @@ fn find_tangle(tour: &Vec<usize>, x: &Vec<Vec<f64>>) -> Option<(usize, usize)> {
             let g = [e[0], f[0]];
             let h = [e[1], f[1]];
 
-            if f64::max(edge_length(&e, &x), edge_length(&f, &x)) > f64::max(edge_length(&g, &x), edge_length(&h, &x)) 
-                && f64::min(edge_length(&e, &x), edge_length(&f, &x)) > f64::min(edge_length(&g, &x), edge_length(&h, &x)) {
+            //if f64::max(edge_length(&e, &x), edge_length(&f, &x)) > f64::max(edge_length(&g, &x), edge_length(&h, &x)) 
+            //    && f64::min(edge_length(&e, &x), edge_length(&f, &x)) > f64::min(edge_length(&g, &x), edge_length(&h, &x)) {
+            if edge_length(&e, &x) + edge_length(&f, &x) > edge_length(&g, &x) + edge_length(&h, &x) {
                 let idxe = i % n;
                 let idxf = j % n;
                 if f.contains(&e[0]) || f.contains(&e[1]) {

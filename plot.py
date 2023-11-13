@@ -17,19 +17,24 @@ def read_output(path):
         return ns, lens
 
 
-ns, lens = read_output("out")
-ns = np.array(ns)
-lens = np.array(lens)
-
 fig, ax = plt.subplots(nrows=1, ncols=2)
-ax[0].plot(ns, lens, marker='o', color="black")
+
+for f, m in zip(["xopt", "yopt", "2opt"], ['o', 'D', '*']):
+    ns, lens = read_output("out_" + f)
+    ns = np.array(ns)
+    lens = np.array(lens)
+
+    ax[0].plot(ns, lens, marker=m, color="black", label=f)
+    ax[1].plot(ns, lens/(np.sqrt(ns)), marker=m, color="black", label=f)
+
+
 ax[0].set_ylabel(r"Average tour length")
-
-ax[1].plot(ns, lens/(np.sqrt(ns)), marker='o', color="black")
 ax[1].set_ylabel(r"Average tour length / $\sqrt{n}$")
-
 
 for a in ax:
     a.set_xlabel("n")
+    a.legend()
+    a.set_ylim(0)
+
 plt.show()
 
